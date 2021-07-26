@@ -35,11 +35,11 @@ const rootReducers = combineReducers({
 type RootReducerType = typeof rootReducers; 
 export type AppStateType = ReturnType<RootReducerType>;
 ```
-1. Здесь же делаем общий тпи для всех actions  в приложении
+2. Здесь же делаем общий тпи для всех actions  в приложении
 ```
 export type InferActionsType<T> = T extends {[key: string]: (...args: any[]) => infer U} ? U : never;
 ```
-1. Здесь же типизация для всех thunks в приложении
+3. Здесь же типизация для всех thunks в приложении
 ```
 export type BaseThunkType<A extends Action, R = Promise<void>> = ThunkAction<R, AppStateType, unknown, A>;
 ```
@@ -64,11 +64,11 @@ let initialState = {
 ```
 export type initialStateType = typeof initialState;
 ```
-1. Импортируем из reduxStore InferActionsType для типизации actions, необходимых для данного reducer 
+2. Импортируем из reduxStore InferActionsType для типизации actions, необходимых для данного reducer 
 ```
 type ActionsType = InferActionsType<typeof имяActions>;
 ```
-1. Типизируем reducer
+3. Типизируем reducer
 ```
 const usersReducer = (state = initialState, action: ActionsTypes): InitialStateType => {
     switch (action.type) {
@@ -179,8 +179,8 @@ type MapStatePropsType = {
     isFetching: boolean,
     totalUsersCount: number,
     portionSize: number,
-    users: Array<UserType>,
-    followingInProgress: Array<number>
+    users: UserType[],
+    followingInProgress: number[]
 };
 ```
 - MapDispatchPropsType - типизированные thunks, принимаемые контейнерной компонентой
