@@ -40,7 +40,8 @@ export type AppStateType = ReturnType<RootReducerType>;
 export type InferActionsType<T> = T extends {[key: string]: (...args: any[]) => infer U} ? U : never;
 ```
 1. Здесь же типизация для всех thunks в приложении
-```export type BaseThunkType<A extends Action, R = Promise<void>> = ThunkAction<R, AppStateType, unknown, A>;
+```
+export type BaseThunkType<A extends Action, R = Promise<void>> = ThunkAction<R, AppStateType, unknown, A>;
 ```
 
 #### reducer.ts
