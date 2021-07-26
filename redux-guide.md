@@ -16,7 +16,8 @@
 
 Константа rootReducer принимает state и возвращает новый state
 
-```const rootReducers = combineReducers({
+```
+const rootReducers = combineReducers({
     profilePage: profileReducer,
     dialogsPage: dialogsReducer,
     sidebar: sidebarReducer,
@@ -30,11 +31,13 @@
 Типизация:
 
 1. rootReducer
-``` type RootReducerType = typeof rootReducers; 
+``` 
+type RootReducerType = typeof rootReducers; 
 export type AppStateType = ReturnType<RootReducerType>;
 ```
 1. Здесь же делаем общий тпи для всех actions  в приложении
-```export type InferActionsType<T> = T extends {[key: string]: (...args: any[]) => infer U} ? U : never;
+```
+export type InferActionsType<T> = T extends {[key: string]: (...args: any[]) => infer U} ? U : never;
 ```
 1. Здесь же типизация для всех thunks в приложении
 ```export type BaseThunkType<A extends Action, R = Promise<void>> = ThunkAction<R, AppStateType, unknown, A>;
@@ -47,7 +50,8 @@ export type AppStateType = ReturnType<RootReducerType>;
 Типизация:
 
 1. initialState
-```let initialState = {
+```
+let initialState = {
     users: [] as UserType[];
     pageSize: 10;
     isFetching: false;
@@ -56,13 +60,16 @@ export type AppStateType = ReturnType<RootReducerType>;
 };
 ```
 Будет использоваться в типизации reducer
-```export type initialStateType = typeof initialState;
+```
+export type initialStateType = typeof initialState;
 ```
 1. Импортируем из reduxStore InferActionsType для типизации actions, необходимых для данного reducer 
-```type ActionsType = InferActionsType<typeof имяActions>;
+```
+type ActionsType = InferActionsType<typeof имяActions>;
 ```
 1. Типизируем reducer
-```const usersReducer = (state = initialState, action: ActionsTypes): InitialStateType => {
+```
+const usersReducer = (state = initialState, action: ActionsTypes): InitialStateType => {
     switch (action.type) {
         case SET_USERS:
             return { ...state, users: action.users };
@@ -75,7 +82,8 @@ export type AppStateType = ReturnType<RootReducerType>;
 #### actions.ts
 
 Имеют следующий вид:
-```export const actions = {
+```
+export const actions = {
     addPost: (newPostBody: string) => ({type: ADD_POST, newPostBody} as const),
     deletePost: (postId: number) => ({type: DELETE_POST, postId} as const),
     setUserProfile: (profile: ProfileType) => ({type: SET_USER_PROFILE, profile} as const),
@@ -91,7 +99,8 @@ export type AppStateType = ReturnType<RootReducerType>;
 #### thunks.ts
 
 Используем код с async await:
-```export const getUserProfileThC = (userId: number): ThunkType => {
+```
+export const getUserProfileThC = (userId: number): ThunkType => {
     return async (dispatch) => {
         let data = await profileAPI.getUserProfile(userId);
         dispatch(actions.setUserProfile(data));
@@ -103,10 +112,12 @@ export type AppStateType = ReturnType<RootReducerType>;
 Типизация:
 
 1. Импортируем из reduxStore BaseThunkType для типизации thunks:
-```type ThunkType = ThunkAction<Promise<void>, AppStateType, unknown, ActionsTypes>;
+```
+type ThunkType = ThunkAction<Promise<void>, AppStateType, unknown, ActionsTypes>;
 ```
 В данном фрагменте описываем thunk:
-```<Promise<void>, AppStateType, unknown, ActionsTypes>
+```
+<Promise<void>, AppStateType, unknown, ActionsTypes>
 ```
 - Promise<void> - всегда возвращает promise
 - AppStateType - типизированный state из redduxStore.ts
@@ -123,7 +134,8 @@ export type AppStateType = ReturnType<RootReducerType>;
 Типизация:
 
 Приписываем к compose React.ComponentType:
-```export default compose<React.ComponentType>(
+```
+export default compose<React.ComponentType>(
     connect<MapStatePropsType, MapDispatchPropsType, {} ,AppStateType>(mapStateToProps, { addMessage: actions.addMessage }),
     withAuthRedirect
 )(Dialogs);
@@ -133,7 +145,8 @@ export type AppStateType = ReturnType<RootReducerType>;
 
 Типизация:
 
-```export default connect<MapStatePropsType, MapDispatchPropsType, OwnPropsType, AppStateType>(mapStateToProps, {
+```
+export default connect<MapStatePropsType, MapDispatchPropsType, OwnPropsType, AppStateType>(mapStateToProps, {
     getUsersThunkCreator,
     followThunkCreator,
     unfollowThunkCreator
@@ -144,7 +157,8 @@ export type AppStateType = ReturnType<RootReducerType>;
 
 Например:
 Принятые данные
-```const mapStateToProps = (state: AppStateType): MapStatePropsType => {
+```
+const mapStateToProps = (state: AppStateType): MapStatePropsType => {
     return {
         users: getUsers(state),
         pageSize: getPageSize(state),
@@ -157,7 +171,8 @@ export type AppStateType = ReturnType<RootReducerType>;
 };
 ```
 Их типизация
-```type MapStatePropsType = {
+```
+type MapStatePropsType = {
     currentPage: number,
     pageSize: number,
     isFetching: boolean,
@@ -173,7 +188,8 @@ export type AppStateType = ReturnType<RootReducerType>;
 Принятые данные - описаны в connect
 
 Их типизация
-```type MapDispatchPropsType = {
+```
+type MapDispatchPropsType = {
     followThunkCreator: (userId: number) => void,
     unfollowThunkCreator: (userId: number) => void,
     getUsersThunkCreator: (currentPage: number, pageSize: number) => void
