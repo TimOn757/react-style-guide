@@ -99,6 +99,19 @@ export const actions = {
 
 Описана в пункте reducer.ts
 
+Константы, которые передаются в type для actions, необходимо определять подробно, чтобы избежать конфликта, который может возникнуть из-за совпадений присвоенных значений. Согласно redux ducks, это должно выгладеть следующим образом:
+
+```
+const ADD_POST = 'sn/profile/ADD_POST';
+const DELETE_POST = 'sn/profile/DELETE_POST'
+const SET_USER_PROFILE = 'sn/profile/SET_USER_PROFILE';
+```
+
+Перед основным названием делаем уточнения:
+sn - socail network
+profile - относится к reduser профиля
+ADD-POST - название константы
+
 #### thunks.ts
 
 Используем код с async await:
